@@ -34,3 +34,6 @@ Desktop.ini
 
 # Local tool caches
 hermes-cache/
+
+# Office lock files
+~$*
