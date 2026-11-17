@@ -33,5 +33,11 @@
 - Play検証: t=3s→26.8 / R→30再初期化(読み28.7=経過分) ✓ / timeout後item通過もcount 0のまま(guard) ✓ / Rで復帰しcounting再開(count=1) ✓
 - OnGUI表示(TIME UP/Time)はheadlessではスクリーンショット不可、フラグ+反射読みで検証
 
+## 派手な演出（ユーザー追加依頼）— VFX
+- 実装: 取得時に金色スパークバースト(1粒子システム)+短カメラシェイク+カウントUI一時拡大(0.3s)。CLEAR時に5色コンフェッティ(0.15s間隔5発)+大きめシェイク+"CLEAR!"脉冲(1.2s)。Rリセットでシェイク/脉冲/VFXカウンタ停止、固定カメラ(0,10,-14) rot(45,0,0)へ完全復元
+- Play検証(実測): baseline 0/0/0 ✓ → Item_1取得直後に count=1・vfxSpawned=1・live ParticleSystem=1・shake窗口/shakeActive=True・countPulseActive=True(同一スニペット内の即時読み) ✓ → W walkでcount=5(二重カウントなし)・vfxSpawned=10(取得5+celebrate5)・clearShown=True・celebrate中にlive PS>0 ✓ → Rでcount/vfx/clearShown/shake窓すべて0・items 5個active復元・カメラbase復元 ✓。errorCount 0 throughout
+- 修正した実装バグ: Unity 6では`AddComponent<ParticleSystemRenderer>`がnullを返す(rendererはParticleSystemに自動付随)→`GetComponent`使用に変更。`ParticleSystemShapeType.SphereMesh`は存在せず→`SphereShell`。`cam = Camera.main`型エラー→`.transform`
+- 注意: headlessにはrender loopがないためLateUpdateのシェイク動き・OnGUIの拡大表示は画面上では検証不可(フラグ/オブジェクト生成で検証)。GUI EditorでPlayすれば視覚的に動作する
+
 ## 未完了
 - UI の視覚確認(OnGUI スクリーンショット)は GUI Editor セッションが必要(現状 headless)。ロジック(0→5、CLEAR 表示条件)はフラグレベルで検証済み。
