@@ -32,6 +32,15 @@ public class GameLogic : MonoBehaviour
         bool down = kb.rKey.isPressed; // edge-detect: works with state-write injection too
         if (down && !rWasDown) ResetAll(); // B5: R reset
         rWasDown = down;
+
+        // Auto-return: fell off the floor edge / below the floor -> respawn at initial position.
+        // count/collected/CLEAR are intentionally untouched.
+        if (transform.position.y < -1f)
+        {
+            var rb = GetComponent<Rigidbody>();
+            transform.position = initialPositions["Player"];
+            if (rb != null) rb.linearVelocity = Vector3.zero;
+        }
     }
 
     void OnTriggerEnter(Collider other)

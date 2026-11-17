@@ -24,5 +24,9 @@
 2. R キー: bridge の入力は device state 直書きで `wasPressedThisFrame` が発火しない → isPressed の立ち上がりエッジ検出(FixedUpdate)へ変更 ✓
 3. ResetAll の `GameObject.Find` は inactive オブジェクトを見つけられない → Awake で item 参照を保持するよう修正 ✓
 
+## 追加（ユーザー報告後）— 落下時の自動復帰
+- 報告「落下しても戻らない」→ 現行実装の復元手段はRリセットのみ(仕様)、跳ね返りはない(restitution 0)。落下テスト: y=3から落下→床で静止 ✓(トリガー誤設定修正後)
+- ユーザー選択により追加: 床縁/貫通で y<-1 になった初期位置へ自動復帰(count保持)。検証: Item_1取得(count=1)→(10.5,-3,0)テレポート→自動復帰 (0,0.5,-7), count=1保持, 速度0 ✓
+
 ## 未完了
 - UI の視覚確認(OnGUI スクリーンショット)は GUI Editor セッションが必要(現状 headless)。ロジック(0→5、CLEAR 表示条件)はフラグレベルで検証済み。
