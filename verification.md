@@ -28,5 +28,10 @@
 - 報告「落下しても戻らない」→ 現行実装の復元手段はRリセットのみ(仕様)、跳ね返りはない(restitution 0)。落下テスト: y=3から落下→床で静止 ✓(トリガー誤設定修正後)
 - ユーザー選択により追加: 床縁/貫通で y<-1 になった初期位置へ自動復帰(count保持)。検証: Item_1取得(count=1)→(10.5,-3,0)テレポート→自動復帰 (0,0.5,-7), count=1保持, 速度0 ✓
 
+## 30秒制限（ユーザー追加依頼）
+- 設計: OnGUIに残り時間表示、TIME UPでcounting停止（movementは継続）、Rリセットでタイマーも再初期化(30s)。count/collected/CLEARはtimeoutで消さない
+- Play検証: t=3s→26.8 / R→30再初期化(読み28.7=経過分) ✓ / timeout後item通過もcount 0のまま(guard) ✓ / Rで復帰しcounting再開(count=1) ✓
+- OnGUI表示(TIME UP/Time)はheadlessではスクリーンショット不可、フラグ+反射読みで検証
+
 ## 未完了
 - UI の視覚確認(OnGUI スクリーンショット)は GUI Editor セッションが必要(現状 headless)。ロジック(0→5、CLEAR 表示条件)はフラグレベルで検証済み。
